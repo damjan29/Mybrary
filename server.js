@@ -1,22 +1,23 @@
 // if (process.env.NODE_ENV !== 'production') {
 //     require('dotenv').parse();
 // }
-
-
-
 const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 
+
+console.log(process.env.NODE_ENV);
+
 mongoose.connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+     useCreateIndex: true
 }).then(() => {
 console.log("DB connected!");
 })
-
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
