@@ -1,11 +1,10 @@
-// if (process.env.NODE_ENV !== 'production') {
-//     require('dotenv').parse();
-// }
+if (process.env.NODE_ENV !== 'production') {
+    const dotenv = require('dotenv').config();
+}
 const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 
