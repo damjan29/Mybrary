@@ -9,7 +9,8 @@ const bodyParser = require('body-parser');
 
 
 const indexRouter = require('./routes/index');
-const authRouter = require('./routes/authors')
+const authRouter = require('./routes/authors');
+const bookRouter = require('./routes/books');
 
 
 app.set('view engine', 'ejs');
@@ -21,7 +22,8 @@ app.use(bodyParser.urlencoded({limit: '10mb', extended: false}))
 
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
-     useCreateIndex: true
+     useCreateIndex: true,
+     useUnifiedTopology: true
 }).then(() => {
 console.log("DB connected!");
 })
@@ -30,5 +32,6 @@ console.log("DB connected!");
 
 app.use('/', indexRouter);
 app.use('/authors', authRouter);
+app.use('/books', bookRouter);
 
 app.listen(process.env.PORT || 3000);
