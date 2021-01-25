@@ -6,13 +6,13 @@
 <div>
     <label for="author">Author</label>
     <select name="author" id="author">
-        <% authors.forEach(author => { %>
-        <% if (author.id === book.author) { %>
-        <option selected label="<%= author.name %>" value="<%= author.id %>">
-            <% } else { %>
-        <option label="<%= author.name %>" value="<%= author.id %>">
-            <% } %>
-            <% }) %>
+        <% authors.forEach(author=> { %>
+            <% if (author.id===book.author) { %>
+                <option selected label="<%= author.name %>" value="<%= author.id %>">
+                    <% } else { %>
+                <option label="<%= author.name %>" value="<%= author.id %>">
+                    <% } %>
+                        <% }) %>
     </select>
 </div>
 
@@ -29,12 +29,12 @@
 
 <div>
     <label for="cover">Cover</label>
-    <input type="file" name="cover">
+    <input type="file" name="cover" class="filepond">
 </div>
 
 <div>
     <label for="description">Description</label>
-    <textarea type="file" name="description">
+    <textarea name="description">
         <%= book.description %>
     </textarea>
 </div>

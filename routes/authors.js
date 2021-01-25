@@ -6,15 +6,15 @@ const Author = require('../models/author');
 // All Authors Route
 router.get('/', async (req, res) => {
     let searchOptions = {};
-    if(req.query.name != null && req.query.name !== '') {
+    if (req.query.name != null && req.query.name !== '') {
         searchOptions.name = new RegExp(req.query.name, 'i');
-    } 
+    }
     try {
         console.log(req.query);
         const authors = await Author.find(searchOptions);
-        res.render('authors/index', { 
-            authors: authors, 
-            searchOptions: req.query 
+        res.render('authors/index', {
+            authors: authors,
+            searchOptions: req.query
         })
     } catch {
         res.redirect('/')
@@ -30,7 +30,6 @@ router.get('/new', (req, res) => {
 router.post('/', async (req, res) => {
     const author = new Author({
         name: req.body.name,
-
     });
 
     try {
@@ -44,8 +43,6 @@ router.post('/', async (req, res) => {
         });
     }
 })
-
-
 
 
 module.exports = router;

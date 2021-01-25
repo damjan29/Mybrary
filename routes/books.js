@@ -1,18 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const Book = require('../models/book');
 const Author = require('../models/author');
-const uploadPath = path.join('public', Book.coverImageBasePath); 
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-const upload = multer({
-    dest: uploadPath,
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype))
-    }
-})
+const imageMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
 
 // All Books Route
@@ -30,19 +20,16 @@ router.get('/', async (req, res) => {
         query = query.gte('publishDate', req.query.publishedAfter)
     }
 
-  try {
-    //   const books = await Book.find({}); // za sve knjige bez pretrage
-      const books = await query.exec();
-      res.render('books/index', {
-          books: books,
-          searchOptions: req.query
-      });
-  } catch (error) {
-      
-  }
+    try {
+        //   const books = await Book.find({}); // za sve knjige bez pretrage
+        const books = await query.exec();
+        res.render('books/index', {
+            books: books,
+            searchOptions: req.query
+        });
+    } catch (error) {
 
-   
-
+    }
 });
 
 // New Book Route
@@ -51,38 +38,27 @@ router.get('/new', async (req, res) => {
 });
 
 // Create Book Route
-router.post('/', upload.single('cover'), async (req, res) => {
-    const fileName = req.file != null ? req.file.filename : null
-    console.log(req.body);
-    console.log(req.file);
+router.post('/', async (req, res) => {
     const book = new Book({
         title: req.body.title,
         author: req.body.author,
         publishDate: new Date(req.body.publishDate),
         pageCount: req.body.pageCount,
-        coverImageName: fileName,
         description: req.body.description
     });
-    console.log(book);
+
+    // console.log(book, req.body.cover);
+    saveCover(book, req.body.cover);
 
     try {
         const newBook = await book.save();
         // res.redirect(`books/${newBook.id}`)
         console.log(newBook);
         res.redirect('books');
-    } catch (error) {
-        if(book.coverImageName != null) {
-            removeBookCover(book.coverImageName);
-        }
+    } catch {
         renderNewPage(res, book, true);
     }
 });
-
-function removeBookCover(fileName) {
-fs.unlink(path.join(uploadPath, fileName), err => {
-    if (err) console.log(err);
-})
-}
 
 
 async function renderNewPage(res, book, hasError = false) {
@@ -93,15 +69,25 @@ async function renderNewPage(res, book, hasError = false) {
             authors: authors,
             book: book
         }
-        if(hasError) params.errorMessage = 'Error Creating Book';
+        if (hasError) params.errorMessage = 'Error Creating Book';
 
         res.render('books/new', params);
     } catch {
         res.redirect('/books');
-   
+
     }
 }
 
+function saveCover(book, coverEncoded) {
+    // console.log(book, "XXX", coverEncoded);
+    if (coverEncoded == null) return;
+    // console.log(coverEncoded);
+    const cover = JSON.parse(coverEncoded)
+    if (cover != null && imageMimeTypes.includes(cover.type)) {
+        book.coverImage = new Buffer.from(cover.data, 'base64');
+        book.coverImageType = cover.type;
+    }
+}
 
 
 module.exports = router;
