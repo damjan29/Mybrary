@@ -94,12 +94,11 @@ router.put('/:id', async (req, res) => {
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(book, req.body.cover);
         }
-        // console.log(book);
-        await Book.save();
 
+        await book.save();
         res.redirect(`/books/${book.id}`)
 
-    } catch {
+    } catch (error) {
         if (book != null) {
             renderEditPage(res, book, true)
         } else {
