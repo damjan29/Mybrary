@@ -1,2 +1,2 @@
 # Mybrary
-Full stack app build with node.js, epxress, mongodb and mongoose
+Full stack app created with node.js, epxress, mongodb and mongoose
